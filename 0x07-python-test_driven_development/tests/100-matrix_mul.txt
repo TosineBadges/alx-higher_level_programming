@@ -1,70 +1,113 @@
-#!/usr/bin/python3
-"""
-    100-matrix_mul Module
-"""
+====================================
+Test for the 100-matrix_mul module
+====================================
+
+This test is for computation of matrices(multiplication).
+The multiplication of the matrices must be possible if not an
+error is raised.
+
+Importing the 100-matrices_mul module
+=====================================
+        >>> matrix_mul = __import__("100-matrix_mul").matrix_mul
+
+checking for module docstring
+::
+        >>> Mdocs = __import__("100-matrix_mul").__doc__
+        >>> len(Mdocs) > 5
+        True
+
+checking function docstring for module
+::
+        >>> Fdocs = matrix_mul.__doc__
+        >>> len(Fdocs) > 5
+        True
+
+Tests when wrong Type is passed
+::
+        >>> matrix_mul([[2, 3, 4], [4, 2, 3]], None)
+	Traceback (most recent call last):
+	...
+	TypeError: m_b must be a list
+	>>> matrix_mul("school", [[2, 3, 4], [4, 2, 3]])
+	Traceback (most recent call last):
+	...
+	TypeError: m_a must be a list
+	>>> matrix_mul([[1, 2], "you"], [[1, 2, 3], [2, 3, 4]])
+	Traceback (most recent call last):
+	...
+	TypeError: m_a must be a list of lists
+	>>> matrix_mul([[1, 2], [2, 3], [3, 4]], [1, 3, 4])
+	Traceback (most recent call last):
+	...
+	TypeError: m_b must be a list of lists
+	>>> matrix_mul([[1, 2], [2, 3]], [[1, 3], (4, 4)])
+	Traceback (most recent call last):
+	...
+	TypeError: m_b must be a list of lists
+	>>> matrix_mul([{1, 2}, [2, 3]], [[1, 3], [4, 5]])
+	Traceback (most recent call last):
+	...
+	TypeError: m_a must be a list of lists
+	>>> matrix_mul([[1.3, 2, 4], [2.5, 3]], [[1, 2], [4, 5]])
+	Traceback (most recent call last):
+	...
+	TypeError: each row of m_a must be of the same size
+	>>> matrix_mul([[1, 2.0, 3], [4.9, 1, 4]], [[1, 2, 3], [4, 2]])
+	Traceback (most recent call last):
+	...
+	TypeError: each row of m_b must be of the same size
 
 
-def matrix_mul(m_a, m_b):
-    """
-        Multiplies 2 matrices
+Tests when wrong values are passed as arguement
+::
+	>>> matrix_mul([[]], [[2, 4]])
+	Traceback (most recent call last):
+	...
+	ValueError: m_a can't be empty
+	>>> matrix_mul([], [[2, 4, 4.8]])
+	Traceback (most recent call last):
+	...
+	ValueError: m_a can't be empty
+	>>> matrix_mul([[1, 4.2], [1, 4.0]], [])
+	Traceback (most recent call last):
+	...
+	ValueError: m_b can't be empty
+	>>> matrix_mul([[1.5, 4.2], [1, 4.0]], [[]])
+	Traceback (most recent call last):
+	...
+	ValueError: m_b can't be empty
+	>>> matrix_mul([[1, 4.2], [1, 4.0]], [[3, 5],[]])
+	Traceback (most recent call last):
+	...
+	ValueError: m_b can't be empty
+	>>> matrix_mul([[1, 4.2, 3], [1, 4.0, 4]], [[1, 4], [3, 5]])
+	Traceback (most recent call last):
+	...
+	ValueError: m_a and m_b can't be multiplied
+	>>> matrix_mul([[1, 3], [3, 4], [4, 2]], [[1, 4], [3, 5], [4, 1]])
+	Traceback (most recent call last):
+	...
+	ValueError: m_a and m_b can't be multiplied
 
-        Args:
-            m_a: first matrix(2D List)
-            m_b: second matrix(2D List)
+Tests for use of normal functionality of matrices
+::
+	>>> matrix_mul([[1, 3], [2, 4]], [[0, 1], [1,2]])
+	[[3, 7], [4, 10]]
+	>>> matrix_mul([[1.24, 4.2], [4, 3.2]], [[3, 5], [1.5, 4.9]])
+	[[10.02, 26.78], [16.8, 35.68]]
+	>>> matrix_mul([[1, -2.5, -5], [1, 0, -2]], [[1, 4], [5, 9], [-1.4, -2]])
+	[[-4.5, -8.5], [3.8, 8]]
+	>>> matrix_mul([[1, 2], [3, 4]], [[1.5, 2.5, 3.5], [4.5, 6.5, 7.5]])
+	[[10.5, 15.5, 18.5], [22.5, 33.5, 40.5]]
+	
+Checking for one too few args:
+	>>> matrix_mul([[1, 2], [3, 4]])
+	Traceback (most recent call last):
+	...
+	TypeError: matrix_mul() missing 1 required positional argument: 'm_b'
 
-        Returns:
-            the product of two matrices
-    """
-
-    prev_len = 0
-    if type(m_a) is not list:
-        raise TypeError("m_a must be a list")
-    if type(m_b) is not list:
-        raise TypeError("m_b must be a list")
-    if not m_a:
-        raise ValueError("m_a can't be empty")
-    if not m_b:
-        raise ValueError("m_b can't be empty")
-
-    for blocks in m_a:
-        if type(blocks) is not list:
-            raise TypeError("m_a must be a list of lists")
-        if not blocks:
-            raise ValueError("m_a can't be empty")
-        for integers in blocks:
-            if type(integers) is not int and type(integers) is not float:
-                raise TypeError("m_a should contain only integers or floats")
-        if len(blocks) != prev_len and prev_len != 0:
-            raise TypeError("each row of m_a must be of the same size")
-        prev_len = len(blocks)
-
-    prev_len = 0
-    for blocks in m_b:
-        if type(blocks) is not list:
-            raise TypeError("m_b must be a list of lists")
-        if not blocks:
-            raise ValueError("m_b can't be empty")
-        for integers in blocks:
-            if type(integers) is not int and type(integers) is not float:
-                raise TypeError("m_b should contain only integers or floats")
-        if len(blocks) != prev_len and prev_len != 0:
-            raise TypeError("each row of m_b must be of the same size")
-        prev_len = len(blocks)
-
-    if len(m_a[0]) != len(m_b):  # cols of m_a must be equal to rows of m_b
-        raise ValueError("m_a and m_b can't be multiplied")
-
-    result_list = list()    # multiplication starts
-    for row_a in range(len(m_a)):
-        flag = 0
-        inner_list = list()
-        for row_b in range(len(m_b)):
-            for col in range(len(m_b[row_b])):
-                if flag == 0:
-                    inner_list.append(m_a[row_a][row_b] * m_b[row_b][col])
-                else:
-                    inner_list[col] += (m_a[row_a][row_b] * m_b[row_b][col])
-            flag = 1
-        result_list.append(inner_list)  # multiplied matrix(2D List)
-
-    return result_list
+Checking for too many args:
+	 >>> matrix_mul([[1, 2], [3, 4]], [[5, 6], [7, 8]], [[9, 10], [11, 12]])
+	 Traceback (most recent call last):
+	 ...
+	 TypeError: matrix_mul() takes 2 positional arguments but 3 were given
